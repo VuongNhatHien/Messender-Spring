@@ -1,0 +1,15 @@
+server:
+  port: ${SERVER_PORT}
+spring:
+  application:
+    name: messender-spring
+
+  datasource:
+    url: jdbc:postgresql://localhost:${DB_PORT}/${DB_NAME}
+    username: ${DB_USER}
+    password: ${DB_PASSWORD}
+
+  jpa:
+    hibernate:
+      ddl-auto: none
+
