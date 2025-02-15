@@ -1,0 +1,20 @@
+services:
+  postgres:
+    container_name: postgres
+    image: postgres:17
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+      PGDATA: /data/postgres
+    volumes:
+      - pgdata:/data/postgres
+    ports:
+      - ${DB_PORT}:${DB_PORT}
+    restart: always
+volumes:
+  pgdata:
+
+networks:
+  default:
+    driver: bridge
