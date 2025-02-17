@@ -1,7 +1,6 @@
 package com.example.spring_backend.shared;
 
 import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
@@ -13,16 +12,10 @@ import java.util.Optional;
 public abstract class BaseService<T, ID> {
 
     protected final JpaRepository<T, ID> repository;
-    protected final ModelMapper mapper;
 
     // Create or Update
     public T create(T entity) {
         return repository.save(entity);
-    }
-
-    public <Dto> Dto create(T entity, Class<Dto> dtoClass) {
-        T savedEntity = repository.save(entity);
-        return mapper.map(savedEntity, dtoClass);
     }
 
     // Read (Single Entity)
