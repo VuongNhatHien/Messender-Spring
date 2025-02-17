@@ -19,7 +19,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http    .csrf(AbstractHttpConfigurer::disable) // Disable CSRF for stateless APIs
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/**", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
+//                        .requestMatchers("/auth/**", "/swagger-ui/**", "/v3/api-docs/**", "/users/**").permitAll()
                         .anyRequest().permitAll() // Protect all other endpoints
                 );
         return http.build();
