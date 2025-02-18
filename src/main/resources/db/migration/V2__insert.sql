@@ -12,4 +12,4 @@ INSERT INTO chats (user1_id, user2_id)
 VALUES
 (1, 2),
 (1, 3),
-(3, 2);
+(3, 4);
