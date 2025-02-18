@@ -6,6 +6,7 @@ import com.example.spring_backend.exception.BadRequestException;
 import com.example.spring_backend.exception.ConflictException;
 import com.example.spring_backend.shared.BaseService;
 import com.example.spring_backend.shared.ErrorCode;
+import com.example.spring_backend.user.dto.PreviewChatResponse;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
@@ -42,5 +43,9 @@ public class UserService extends BaseService<User, Long> {
 
     public List<User> getNotConnectedUsers(Long meId) {
         return userRepository.getNotConnectedUsers(meId);
+    }
+
+    public List<PreviewChatResponse> getPreviews(Long meId) {
+        return userRepository.getPreviews(meId);
     }
 }

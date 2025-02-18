@@ -1,6 +1,7 @@
 package com.example.spring_backend.user;
 
 import com.example.spring_backend.chat.Chat;
+import com.example.spring_backend.user.dto.PreviewChatResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -25,5 +26,12 @@ public class UserController {
     public List<User> getNotConnectedUsers() {
         Long meId = 1L;
         return userService.getNotConnectedUsers(meId);
+    }
+
+    @Operation(summary = "Get all preview chats")
+    @GetMapping("chats")
+    public List<PreviewChatResponse> getPreviews() {
+        Long meId = 1L;
+        return userService.getPreviews(meId);
     }
 }
