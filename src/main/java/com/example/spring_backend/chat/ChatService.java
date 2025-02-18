@@ -10,6 +10,8 @@ import com.example.spring_backend.shared.ErrorCode;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class ChatService extends BaseService<Chat, Long> {
 
@@ -35,5 +37,9 @@ public class ChatService extends BaseService<Chat, Long> {
             throw new BadRequestException(ErrorCode.NOT_IN_CHAT);
         }
         return messageService.create(new Message(chatId, senderId, input.getMessage()));
+    }
+
+    public List<Message> getMessages(Long chatId) {
+        return messageService.findByChatId(chatId);
     }
 }

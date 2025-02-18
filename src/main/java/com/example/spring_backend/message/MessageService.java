@@ -4,10 +4,18 @@ import com.example.spring_backend.shared.BaseService;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class MessageService extends BaseService<Message, Long> {
 
-    public MessageService(JpaRepository<Message, Long> repository) {
+    private final MessageRepository messageRepository;
+    public MessageService(JpaRepository<Message, Long> repository, MessageRepository messageRepository) {
         super(repository);
+        this.messageRepository = messageRepository;
+    }
+
+    public List<Message> findByChatId(Long chatId) {
+        return messageRepository.findByChatId(chatId);
     }
 }
