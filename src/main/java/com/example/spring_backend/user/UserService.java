@@ -9,6 +9,8 @@ import com.example.spring_backend.shared.ErrorCode;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class UserService extends BaseService<User, Long> {
 
@@ -36,5 +38,9 @@ public class UserService extends BaseService<User, Long> {
             throw new BadRequestException(ErrorCode.ADD_SELF_CHAT);
         }
         return chatService.create(new Chat(meId, userId));
+    }
+
+    public List<User> getNotConnectedUsers(Long meId) {
+        return userRepository.getNotConnectedUsers(meId);
     }
 }

@@ -3,10 +3,9 @@ package com.example.spring_backend.user;
 import com.example.spring_backend.chat.Chat;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.AllArgsConstructor;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RequestMapping("users")
 @RestController
@@ -19,5 +18,12 @@ public class UserController {
     public Chat requestChat(@PathVariable("userId") Long userId) {
         Long meId = 1L;
         return userService.addChat(meId, userId);
+    }
+
+    @Operation(summary = "Get all not-connected users")
+    @GetMapping("not-connected")
+    public List<User> getNotConnectedUsers() {
+        Long meId = 1L;
+        return userService.getNotConnectedUsers(meId);
     }
 }
