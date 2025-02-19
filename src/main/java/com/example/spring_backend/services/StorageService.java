@@ -20,25 +20,13 @@ public class StorageService {
 
     @SneakyThrows
     public String save(@NonNull final MultipartFile file) {
-        final String originalFilename = file.getOriginalFilename();
-        String filenameWithoutExt = "";
-        String fileExtension = "";
+        String originalFilename = file.getOriginalFilename();
+        String filenameWithoutExt = originalFilename != null ? originalFilename.substring(0, originalFilename.lastIndexOf('.')) : "";
+        String fileExtension = originalFilename != null && originalFilename.contains(".") ? originalFilename.substring(originalFilename.lastIndexOf('.')) : "";
 
-        if (originalFilename != null) {
-            int lastDotIndex = originalFilename.lastIndexOf('.');
-            if (lastDotIndex > 0) {
-                filenameWithoutExt = originalFilename.substring(0, lastDotIndex);
-                fileExtension = originalFilename.substring(lastDotIndex);
-            } else {
-                filenameWithoutExt = originalFilename;
-            }
-            filenameWithoutExt = filenameWithoutExt.replace(" ", "_");
-        }
+        filenameWithoutExt = filenameWithoutExt.replace(" ", "_");
+        String uniqueKey = filenameWithoutExt + "_" + UUID.randomUUID() + "_" + System.currentTimeMillis() + fileExtension;
 
-        String timestamp = String.valueOf(System.currentTimeMillis());
-        final String uniqueKey = filenameWithoutExt + "_" + UUID.randomUUID() + "_" + timestamp + fileExtension;
-        final String bucketName = awsS3BucketProperties.getBucketName();
-
-        return s3Template.upload(bucketName, uniqueKey, file.getInputStream()).getURL().toString();
+        return s3Template.upload(awsS3BucketProperties.getBucketName(), uniqueKey, file.getInputStream()).getURL().toString();
     }
 }
