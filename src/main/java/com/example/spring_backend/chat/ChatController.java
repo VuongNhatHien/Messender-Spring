@@ -43,6 +43,12 @@ public class ChatController {
     @Operation(summary = "Get all media")
     @GetMapping("/{chatId}/attachments/media")
     public List<Attachment> getMedia(@PathVariable("chatId") Long chatId) {
-        return chatService.getMedia(chatId);
+        return chatService.getAllMedia(chatId);
+    }
+
+    @Operation(summary = "Get all files")
+    @GetMapping("/{chatId}/attachments/files")
+    public List<Attachment> getFiles(@PathVariable("chatId") Long chatId) {
+        return chatService.getAllFiles(chatId);
     }
 }
