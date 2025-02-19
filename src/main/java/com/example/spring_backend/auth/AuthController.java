@@ -4,7 +4,7 @@ import com.example.spring_backend.auth.dto.LoginRequest;
 import com.example.spring_backend.auth.dto.LoginResponse;
 import com.example.spring_backend.auth.dto.RegisterRequest;
 import com.example.spring_backend.shared.ApiResponse;
-import com.example.spring_backend.shared.JwtService;
+import com.example.spring_backend.services.JwtService;
 import com.example.spring_backend.user.User;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;

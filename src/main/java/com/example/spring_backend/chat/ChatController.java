@@ -4,6 +4,7 @@ import com.example.spring_backend.attachment.Attachment;
 import com.example.spring_backend.chat.dto.SendAttachmentRequest;
 import com.example.spring_backend.chat.dto.SendMessageRequest;
 import com.example.spring_backend.message.Message;
+import com.example.spring_backend.services.GetMeService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -16,11 +17,12 @@ import java.util.List;
 @AllArgsConstructor
 public class ChatController {
     private final ChatService chatService;
+    private final GetMeService getMeService;
 
     @Operation(summary = "Send a message")
     @PostMapping("/{chatId}/messages")
     public Message sendMessage(@PathVariable("chatId") Long chatId, @RequestBody @Valid SendMessageRequest input) {
-        Long meId = 1L;
+        Long meId = getMeService.getMeId();
         return chatService.sendMessage(chatId, meId, input);
     }
 
@@ -36,7 +38,7 @@ public class ChatController {
             @PathVariable("chatId") Long chatId,
             @ModelAttribute @Valid SendAttachmentRequest input
     ) {
-        Long meId = 1L;
+        Long meId = getMeService.getMeId();
         return chatService.sendAttachments(chatId, meId, input);
     }
 

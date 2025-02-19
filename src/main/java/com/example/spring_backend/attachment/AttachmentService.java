@@ -1,7 +1,7 @@
 package com.example.spring_backend.attachment;
 
 import com.example.spring_backend.shared.BaseService;
-import com.example.spring_backend.storage.StorageService;
+import com.example.spring_backend.services.StorageService;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;

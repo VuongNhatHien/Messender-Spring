@@ -1,4 +1,4 @@
-package com.example.spring_backend.storage;
+package com.example.spring_backend.services;
 
 import com.example.spring_backend.config.AwsS3BucketProperties;
 import io.awspring.cloud.s3.S3Template;

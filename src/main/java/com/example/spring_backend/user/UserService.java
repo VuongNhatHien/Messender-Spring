@@ -8,8 +8,6 @@ import com.example.spring_backend.shared.BaseService;
 import com.example.spring_backend.shared.ErrorCode;
 import com.example.spring_backend.user.dto.PreviewChatResponse;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,15 +17,6 @@ public class UserService extends BaseService<User, Long> {
 
     private final UserRepository userRepository;
     private final ChatService chatService;
-
-    public User getMe() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        return (User) authentication.getPrincipal();
-    }
-
-    public Long getMeId() {
-        return getMe().getId();
-    }
 
     public User findByUsername(String username) {
         return userRepository.findByUsername(username).orElseThrow(() -> new BadRequestException(ErrorCode.USER_NOT_FOUND));

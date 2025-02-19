@@ -1,4 +1,4 @@
-package com.example.spring_backend.shared;
+package com.example.spring_backend.services;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

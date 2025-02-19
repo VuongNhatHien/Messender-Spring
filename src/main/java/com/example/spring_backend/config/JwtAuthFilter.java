@@ -1,6 +1,6 @@
 package com.example.spring_backend.config;
 
-import com.example.spring_backend.shared.JwtService;
+import com.example.spring_backend.services.JwtService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

@@ -15,7 +15,7 @@ public interface ChatRepository extends JpaRepository<Chat, Long> {
     FROM Attachment a
     JOIN Message m ON m.attachmentId = a.id
     WHERE m.chatId = :chatId
-      AND (a.type NOT LIKE 'image%' OR a.type LIKE 'video%')
+      AND (a.type LIKE 'image%' OR a.type LIKE 'video%')
     ORDER BY a.createdAt DESC
 """)
     List<Attachment> getAllMedia(@Param("chatId") Long chatId);
