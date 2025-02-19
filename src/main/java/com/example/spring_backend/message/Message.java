@@ -16,4 +16,5 @@ public class Message extends BaseEntity {
     private Long chatId;
     private Long senderId;
     private String message;
+    private Long attachmentId;
 }

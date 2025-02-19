@@ -18,4 +18,12 @@ public class MessageService extends BaseService<Message, Long> {
     public List<Message> findByChatId(Long chatId) {
         return messageRepository.findByChatId(chatId);
     }
+
+    public Message sendMessage(Long chatId, Long senderId, String message) {
+        return create(new Message(chatId, senderId, message, null));
+    }
+
+    public Message sendAttachment(Long chatId, Long senderId, Long attachmentId) {
+        return create(new Message(chatId, senderId, null, attachmentId));
+    }
 }

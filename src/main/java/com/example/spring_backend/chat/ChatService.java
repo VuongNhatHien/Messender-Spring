@@ -1,5 +1,7 @@
 package com.example.spring_backend.chat;
 
+import com.example.spring_backend.attachment.AttachmentService;
+import com.example.spring_backend.chat.dto.SendAttachmentRequest;
 import com.example.spring_backend.chat.dto.SendMessageRequest;
 import com.example.spring_backend.exception.BadRequestException;
 import com.example.spring_backend.exception.ConflictException;
@@ -10,8 +12,6 @@ import com.example.spring_backend.shared.ErrorCode;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
 import java.util.List;
 
 @Service
@@ -19,11 +19,13 @@ public class ChatService extends BaseService<Chat, Long> {
 
     private final ChatRepository chatRepository;
     private final MessageService messageService;
+    private final AttachmentService attachmentService;
 
-    public ChatService(JpaRepository<Chat, Long> repository, ChatRepository chatRepository, MessageService messageService) {
+    public ChatService(JpaRepository<Chat, Long> repository, ChatRepository chatRepository, MessageService messageService, AttachmentService attachmentService) {
         super(repository);
         this.chatRepository = chatRepository;
         this.messageService = messageService;
+        this.attachmentService = attachmentService;
     }
 
     public Chat create(Chat chat) {
@@ -38,7 +40,17 @@ public class ChatService extends BaseService<Chat, Long> {
         if (!chat.getUser1Id().equals(senderId) && !chat.getUser2Id().equals(senderId)) {
             throw new BadRequestException(ErrorCode.NOT_IN_CHAT);
         }
-        return messageService.create(new Message(chatId, senderId, input.getMessage()));
+        return messageService.sendMessage(chatId, senderId, input.getMessage());
+    }
+
+    public Message sendAttachment(Long chatId, Long senderId, SendAttachmentRequest input) {
+        Chat chat = chatRepository.findById(chatId).orElseThrow(() -> new BadRequestException(ErrorCode.CHAT_NOT_FOUND));
+        if (!chat.getUser1Id().equals(senderId) && !chat.getUser2Id().equals(senderId)) {
+            throw new BadRequestException(ErrorCode.NOT_IN_CHAT);
+        }
+
+        Long attachmentId = attachmentService.createAttachment(input.getAttachment()).getId();
+        return messageService.sendAttachment(chatId, senderId, attachmentId);
     }
 
     public List<Message> getMessages(Long chatId) {

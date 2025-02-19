@@ -20,16 +20,29 @@ CREATE TABLE chats
     FOREIGN KEY (user2_id) REFERENCES users (id)
 );
 
-CREATE TABLE messages
+CREATE TABLE attachments
 (
     id         SERIAL PRIMARY KEY,
-    chat_id    INT,
-    sender_id  INT,
-    message    TEXT,
+    url        VARCHAR(255),
+    name       VARCHAR(255),
+    type       VARCHAR(255),
+    size       INT,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT (NOW() AT TIME ZONE 'GMT-7'),
-    updated_at TIMESTAMP WITH TIME ZONE DEFAULT (NOW() AT TIME ZONE 'GMT-7'),
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT (NOW() AT TIME ZONE 'GMT-7')
+);
+
+CREATE TABLE messages
+(
+    id            SERIAL PRIMARY KEY,
+    chat_id       INT,
+    sender_id     INT,
+    message       TEXT,
+    attachment_id INT,
+    created_at    TIMESTAMP WITH TIME ZONE DEFAULT (NOW() AT TIME ZONE 'GMT-7'),
+    updated_at    TIMESTAMP WITH TIME ZONE DEFAULT (NOW() AT TIME ZONE 'GMT-7'),
     FOREIGN KEY (chat_id) REFERENCES chats (id),
-    FOREIGN KEY (sender_id) REFERENCES users (id)
+    FOREIGN KEY (sender_id) REFERENCES users (id),
+    FOREIGN KEY (attachment_id) REFERENCES attachments (id)
 );
 
 CREATE OR REPLACE FUNCTION update_chat_updated_at()

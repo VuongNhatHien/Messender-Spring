@@ -18,5 +18,4 @@ VALUES
 -- Insert message
 INSERT INTO messages (chat_id, sender_id, message)
 VALUES
-(1, 1, 'Hello, Hien2!'),
-(2, 3, 'Hello, Hien3!');
+(1, 1, 'Hello, Hien2!');
