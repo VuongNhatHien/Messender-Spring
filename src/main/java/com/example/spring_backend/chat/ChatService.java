@@ -65,15 +65,34 @@ public class ChatService extends BaseService<Chat, Long> {
                 .toList();
     }
 
-    public List<Message> getMessages(Long chatId) {
+    public List<Message> getMessages(Long chatId, Long meId) {
+        Chat chat = chatRepository.findById(chatId)
+                .orElseThrow(() -> new BadRequestException(ErrorCode.CHAT_NOT_FOUND));
+
+        if (!chat.getUser1Id().equals(meId) && !chat.getUser2Id().equals(meId)) {
+            throw new BadRequestException(ErrorCode.NOT_IN_CHAT);
+        }
         return messageService.getMessages(chatId);
     }
 
-    public List<Attachment> getAllMedia(Long chatId) {
+    public List<Attachment> getAllMedia(Long chatId, Long meId) {
+        Chat chat = chatRepository.findById(chatId)
+                .orElseThrow(() -> new BadRequestException(ErrorCode.CHAT_NOT_FOUND));
+
+        if (!chat.getUser1Id().equals(meId) && !chat.getUser2Id().equals(meId)) {
+            throw new BadRequestException(ErrorCode.NOT_IN_CHAT);
+        }
+
         return chatRepository.getAllMedia(chatId);
     }
 
-    public List<Attachment> getAllFiles(Long chatId) {
+    public List<Attachment> getAllFiles(Long chatId, Long meId) {
+        Chat chat = chatRepository.findById(chatId)
+                .orElseThrow(() -> new BadRequestException(ErrorCode.CHAT_NOT_FOUND));
+
+        if (!chat.getUser1Id().equals(meId) && !chat.getUser2Id().equals(meId)) {
+            throw new BadRequestException(ErrorCode.NOT_IN_CHAT);
+        }
         return chatRepository.getAllFiles(chatId);
     }
 }

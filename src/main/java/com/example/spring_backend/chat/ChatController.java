@@ -28,8 +28,10 @@ public class ChatController {
 
     @Operation(summary = "Get messages")
     @GetMapping("/{chatId}/messages")
+
     public List<Message> getMessages(@PathVariable("chatId") Long chatId) {
-        return chatService.getMessages(chatId);
+        Long meId = getMeService.getMeId();
+        return chatService.getMessages(chatId, meId);
     }
 
     @Operation(summary = "Send attachments")
@@ -45,12 +47,14 @@ public class ChatController {
     @Operation(summary = "Get all media")
     @GetMapping("/{chatId}/attachments/media")
     public List<Attachment> getMedia(@PathVariable("chatId") Long chatId) {
-        return chatService.getAllMedia(chatId);
+        Long meId = getMeService.getMeId();
+        return chatService.getAllMedia(chatId, meId);
     }
 
     @Operation(summary = "Get all files")
     @GetMapping("/{chatId}/attachments/files")
     public List<Attachment> getFiles(@PathVariable("chatId") Long chatId) {
-        return chatService.getAllFiles(chatId);
+        Long meId = getMeService.getMeId();
+        return chatService.getAllFiles(chatId, meId);
     }
 }
