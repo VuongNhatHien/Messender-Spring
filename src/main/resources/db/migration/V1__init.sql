@@ -5,6 +5,7 @@ CREATE TABLE users
     display_name VARCHAR(255),
     password     VARCHAR(255),
     avatar       VARCHAR(255),
+    roles        VARCHAR(255) DEFAULT 'ROLE_USER',
     created_at   TIMESTAMP WITH TIME ZONE DEFAULT (NOW() AT TIME ZONE 'GMT-7'),
     updated_at   TIMESTAMP WITH TIME ZONE DEFAULT (NOW() AT TIME ZONE 'GMT-7')
 );

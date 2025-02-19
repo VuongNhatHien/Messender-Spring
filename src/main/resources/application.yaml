@@ -30,6 +30,11 @@ spring:
       s3:
         region: ${AWS_S3_REGION}
 
+security:
+  jwt:
+    secret-key: ${JWT_SECRET_KEY}
+    expiration-time: ${JWT_EXPIRATION}
+
 com:
   example:
     aws:
