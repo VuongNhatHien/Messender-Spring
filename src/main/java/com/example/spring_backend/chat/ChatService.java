@@ -12,6 +12,7 @@ import com.example.spring_backend.shared.BaseService;
 import com.example.spring_backend.shared.ErrorCode;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -52,7 +53,9 @@ public class ChatService extends BaseService<Chat, Long> {
             throw new BadRequestException(ErrorCode.NOT_IN_CHAT);
         }
 
-        List<Long> attachmentIds = input.getAttachments().stream()
+        List<MultipartFile> attachments = input.getAttachments();
+
+        List<Long> attachmentIds = attachments.stream()
                 .map(attachmentService::createAttachment)
                 .map(Attachment::getId)
                 .toList();
