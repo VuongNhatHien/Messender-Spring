@@ -29,10 +29,13 @@ public class ChatController {
         return chatService.getMessages(chatId);
     }
 
-    @Operation(summary = "Send an attachment")
+    @Operation(summary = "Send attachments")
     @PostMapping("/{chatId}/attachments")
-    public Message sendAttachment(@PathVariable("chatId") Long chatId, @ModelAttribute @Valid SendAttachmentRequest input) {
+    public List<Message> sendAttachments(
+            @PathVariable("chatId") Long chatId,
+            @ModelAttribute @Valid SendAttachmentRequest input
+    ) {
         Long meId = 1L;
-        return chatService.sendAttachment(chatId, meId, input);
+        return chatService.sendAttachments(chatId, meId, input);
     }
 }

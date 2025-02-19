@@ -1,5 +1,6 @@
 package com.example.spring_backend.chat;
 
+import com.example.spring_backend.attachment.Attachment;
 import com.example.spring_backend.attachment.AttachmentService;
 import com.example.spring_backend.chat.dto.SendAttachmentRequest;
 import com.example.spring_backend.chat.dto.SendMessageRequest;
@@ -43,17 +44,25 @@ public class ChatService extends BaseService<Chat, Long> {
         return messageService.sendMessage(chatId, senderId, input.getMessage());
     }
 
-    public Message sendAttachment(Long chatId, Long senderId, SendAttachmentRequest input) {
-        Chat chat = chatRepository.findById(chatId).orElseThrow(() -> new BadRequestException(ErrorCode.CHAT_NOT_FOUND));
+    public List<Message> sendAttachments(Long chatId, Long senderId, SendAttachmentRequest input) {
+        Chat chat = chatRepository.findById(chatId)
+                .orElseThrow(() -> new BadRequestException(ErrorCode.CHAT_NOT_FOUND));
+
         if (!chat.getUser1Id().equals(senderId) && !chat.getUser2Id().equals(senderId)) {
             throw new BadRequestException(ErrorCode.NOT_IN_CHAT);
         }
 
-        Long attachmentId = attachmentService.createAttachment(input.getAttachment()).getId();
-        return messageService.sendAttachment(chatId, senderId, attachmentId);
+        List<Long> attachmentIds = input.getAttachments().stream()
+                .map(attachmentService::createAttachment)
+                .map(Attachment::getId)
+                .toList();
+
+        return attachmentIds.stream()
+                .map(attachmentId -> messageService.sendAttachment(chatId, senderId, attachmentId))
+                .toList();
     }
 
     public List<Message> getMessages(Long chatId) {
-        return messageService.findByChatId(chatId);
+        return messageService.getMessages(chatId);
     }
 }

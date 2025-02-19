@@ -15,8 +15,8 @@ public class MessageService extends BaseService<Message, Long> {
         this.messageRepository = messageRepository;
     }
 
-    public List<Message> findByChatId(Long chatId) {
-        return messageRepository.findByChatId(chatId);
+    public List<Message> getMessages(Long chatId) {
+        return messageRepository.findByChatIdOrderByCreatedAtDesc(chatId);
     }
 
     public Message sendMessage(Long chatId, Long senderId, String message) {
