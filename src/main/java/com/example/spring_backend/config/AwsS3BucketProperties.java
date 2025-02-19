@@ -14,5 +14,4 @@ public class AwsS3BucketProperties {
 
 	@NotBlank(message = "S3 bucket name must be configured")
 	private String bucketName;
-
 }
