@@ -7,8 +7,11 @@ import org.springframework.web.multipart.MultipartFile;
 
 @Service
 public class AttachmentService extends BaseService<Attachment, Long> {
-    public AttachmentService(JpaRepository<Attachment, Long> repository) {
+    private final AttachmentRepository attachmentRepository;
+
+    public AttachmentService(JpaRepository<Attachment, Long> repository, AttachmentRepository attachmentRepository) {
         super(repository);
+        this.attachmentRepository = attachmentRepository;
     }
 
     public Attachment createAttachment(MultipartFile attachment) {

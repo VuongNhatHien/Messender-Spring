@@ -1,5 +1,6 @@
 package com.example.spring_backend.chat;
 
+import com.example.spring_backend.attachment.Attachment;
 import com.example.spring_backend.chat.dto.SendAttachmentRequest;
 import com.example.spring_backend.chat.dto.SendMessageRequest;
 import com.example.spring_backend.message.Message;
@@ -37,5 +38,11 @@ public class ChatController {
     ) {
         Long meId = 1L;
         return chatService.sendAttachments(chatId, meId, input);
+    }
+
+    @Operation(summary = "Get all media")
+    @GetMapping("/{chatId}/attachments/media")
+    public List<Attachment> getMedia(@PathVariable("chatId") Long chatId) {
+        return chatService.getMedia(chatId);
     }
 }

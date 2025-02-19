@@ -65,4 +65,8 @@ public class ChatService extends BaseService<Chat, Long> {
     public List<Message> getMessages(Long chatId) {
         return messageService.getMessages(chatId);
     }
+
+    public List<Attachment> getMedia(Long chatId) {
+        return chatRepository.getMedia(chatId);
+    }
 }
