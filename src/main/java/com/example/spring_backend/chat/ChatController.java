@@ -1,6 +1,7 @@
 package com.example.spring_backend.chat;
 
 import com.example.spring_backend.attachment.Attachment;
+import com.example.spring_backend.chat.dto.GetMessageResponse;
 import com.example.spring_backend.chat.dto.SendAttachmentRequest;
 import com.example.spring_backend.chat.dto.SendMessageRequest;
 import com.example.spring_backend.message.Message;
@@ -29,7 +30,7 @@ public class ChatController {
     @Operation(summary = "Get messages")
     @GetMapping("/{chatId}/messages")
 
-    public List<Message> getMessages(@PathVariable("chatId") Long chatId) {
+    public List<GetMessageResponse> getMessages(@PathVariable("chatId") Long chatId) {
         Long meId = getMeService.getMeId();
         return chatService.getMessages(chatId, meId);
     }

@@ -4,6 +4,7 @@ import com.example.spring_backend.attachment.Attachment;
 import com.example.spring_backend.attachment.AttachmentService;
 import com.example.spring_backend.chat.dto.SendAttachmentRequest;
 import com.example.spring_backend.chat.dto.SendMessageRequest;
+import com.example.spring_backend.chat.dto.GetMessageResponse;
 import com.example.spring_backend.exception.BadRequestException;
 import com.example.spring_backend.exception.ConflictException;
 import com.example.spring_backend.message.Message;
@@ -65,14 +66,14 @@ public class ChatService extends BaseService<Chat, Long> {
                 .toList();
     }
 
-    public List<Message> getMessages(Long chatId, Long meId) {
+    public List<GetMessageResponse> getMessages(Long chatId, Long meId) {
         Chat chat = chatRepository.findById(chatId)
                 .orElseThrow(() -> new BadRequestException(ErrorCode.CHAT_NOT_FOUND));
 
         if (!chat.getUser1Id().equals(meId) && !chat.getUser2Id().equals(meId)) {
             throw new BadRequestException(ErrorCode.NOT_IN_CHAT);
         }
-        return messageService.getMessages(chatId);
+        return chatRepository.getMessages(chatId);
     }
 
     public List<Attachment> getAllMedia(Long chatId, Long meId) {
