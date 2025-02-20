@@ -13,11 +13,11 @@ public class MessageService extends BaseService<Message, Long> {
         this.messageRepository = messageRepository;
     }
 
-    public Message sendMessage(Long chatId, Long senderId, String message) {
-        return create(new Message(chatId, senderId, message, null));
+    public Message sendMessage(Long chatId, Long senderId, String message, Long metadataId) {
+        return create(new Message(chatId, senderId, message, null, metadataId));
     }
 
     public Message sendAttachment(Long chatId, Long senderId, Long attachmentId) {
-        return create(new Message(chatId, senderId, null, attachmentId));
+        return create(new Message(chatId, senderId, null, attachmentId, null));
     }
 }

@@ -2,6 +2,7 @@ package com.example.spring_backend.chat;
 
 import com.example.spring_backend.attachment.Attachment;
 import com.example.spring_backend.chat.dto.GetMessageResponse;
+import com.example.spring_backend.metadata.Metadata;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -32,11 +33,21 @@ public interface ChatRepository extends JpaRepository<Chat, Long> {
     List<Attachment> getAllFiles(@Param("chatId") Long chatId);
 
     @Query("""
+                SELECT l
+                FROM Metadata l
+                JOIN Message m ON m.metadataId = l.id
+                WHERE m.chatId = :chatId
+                ORDER BY l.createdAt DESC
+            """)
+    List<Metadata> getAllLinks(@Param("chatId") Long chatId);
+
+    @Query("""
                 SELECT new com.example.spring_backend.chat.dto.GetMessageResponse(
                     m,
-                    a
+                    a,
+                    l
                 )
-                FROM Message m LEFT JOIN Attachment a ON m.attachmentId = a.id
+                FROM Message m LEFT JOIN Attachment a ON m.attachmentId = a.id LEFT JOIN Metadata l ON m.metadataId = l.id
                 WHERE m.chatId = :chatId
                 ORDER BY m.createdAt DESC
             """)

@@ -5,7 +5,7 @@ CREATE TABLE users
     display_name VARCHAR(255),
     password     VARCHAR(255),
     avatar       VARCHAR(255),
-    roles        VARCHAR(255) DEFAULT 'ROLE_USER',
+    roles        VARCHAR(255)             DEFAULT 'ROLE_USER',
     created_at   TIMESTAMP WITH TIME ZONE DEFAULT (NOW() AT TIME ZONE 'GMT-7'),
     updated_at   TIMESTAMP WITH TIME ZONE DEFAULT (NOW() AT TIME ZONE 'GMT-7')
 );
@@ -32,6 +32,15 @@ CREATE TABLE attachments
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT (NOW() AT TIME ZONE 'GMT-7')
 );
 
+CREATE TABLE metadata
+(
+    id         SERIAL PRIMARY KEY,
+    title      VARCHAR(255),
+    image      VARCHAR(255),
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT (NOW() AT TIME ZONE 'GMT-7'),
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT (NOW() AT TIME ZONE 'GMT-7')
+);
+
 CREATE TABLE messages
 (
     id            SERIAL PRIMARY KEY,
@@ -39,11 +48,13 @@ CREATE TABLE messages
     sender_id     INT,
     message       TEXT,
     attachment_id INT,
+    metadata_id   INT,
     created_at    TIMESTAMP WITH TIME ZONE DEFAULT (NOW() AT TIME ZONE 'GMT-7'),
     updated_at    TIMESTAMP WITH TIME ZONE DEFAULT (NOW() AT TIME ZONE 'GMT-7'),
     FOREIGN KEY (chat_id) REFERENCES chats (id),
     FOREIGN KEY (sender_id) REFERENCES users (id),
-    FOREIGN KEY (attachment_id) REFERENCES attachments (id)
+    FOREIGN KEY (attachment_id) REFERENCES attachments (id),
+    FOREIGN KEY (metadata_id) REFERENCES metadata (id)
 );
 
 CREATE OR REPLACE FUNCTION update_chat_updated_at()

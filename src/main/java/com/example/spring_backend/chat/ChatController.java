@@ -5,6 +5,7 @@ import com.example.spring_backend.chat.dto.GetMessageResponse;
 import com.example.spring_backend.chat.dto.SendAttachmentRequest;
 import com.example.spring_backend.chat.dto.SendMessageRequest;
 import com.example.spring_backend.message.Message;
+import com.example.spring_backend.metadata.Metadata;
 import com.example.spring_backend.services.GetMeService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
@@ -57,5 +58,12 @@ public class ChatController {
     public List<Attachment> getFiles(@PathVariable("chatId") Long chatId) {
         Long meId = getMeService.getMeId();
         return chatService.getAllFiles(chatId, meId);
+    }
+
+    @Operation(summary = "Get all links")
+    @GetMapping("/{chatId}/links")
+    public List<Metadata> getLinks(@PathVariable("chatId") Long chatId) {
+        Long meId = getMeService.getMeId();
+        return chatService.getAllLinks(chatId, meId);
     }
 }
