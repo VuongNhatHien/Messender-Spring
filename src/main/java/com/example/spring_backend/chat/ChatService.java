@@ -27,14 +27,14 @@ public class ChatService extends BaseService<Chat, Long> {
     private final ChatRepository chatRepository;
     private final MessageService messageService;
     private final AttachmentService attachmentService;
-    private final MetadataService linkService;
+    private final MetadataService metadataService;
 
     public ChatService(JpaRepository<Chat, Long> repository, ChatRepository chatRepository, MessageService messageService, AttachmentService attachmentService, MetadataService metadataService) {
         super(repository);
         this.chatRepository = chatRepository;
         this.messageService = messageService;
         this.attachmentService = attachmentService;
-        this.linkService = metadataService;
+        this.metadataService = metadataService;
     }
 
     public Chat create(Chat chat) {
@@ -45,7 +45,6 @@ public class ChatService extends BaseService<Chat, Long> {
     }
 
     private String extractFirstUrl(String text) {
-        // Regex pattern to match URLs
         String urlRegex = "^(https:\\/\\/|http:\\/\\/)[a-zA-Z]{2,}(\\.[a-zA-Z]{2,})(\\.[a-zA-Z]{2,})?\\/[a-zA-Z0-9]{2,}|((https:\\/\\/|http:\\/\\/)[a-zA-Z]{2,}(\\.[a-zA-Z]{2,})(\\.[a-zA-Z]{2,})?)|(https:\\/\\/|http:\\/\\/)[a-zA-Z0-9]{2,}\\.[a-zA-Z0-9]{2,}\\.[a-zA-Z0-9]{2,}(\\.[a-zA-Z0-9]{2,})?";        Pattern pattern = Pattern.compile(urlRegex);
         Matcher matcher = pattern.matcher(text);
 
@@ -65,7 +64,7 @@ public class ChatService extends BaseService<Chat, Long> {
 
         Metadata metadata = null;
         if (url != null) {
-            metadata = linkService.extractMetadata(url);
+            metadata = metadataService.extractMetadata(url);
         }
 
         Long metadataId = null;

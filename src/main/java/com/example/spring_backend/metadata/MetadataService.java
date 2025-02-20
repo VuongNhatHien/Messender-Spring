@@ -20,7 +20,7 @@ public class MetadataService extends BaseService<Metadata, Long> {
 
     public Metadata extractMetadata(String url) {
         System.out.println("Extracting metadata from " + url + "...");
-        Document document = null;
+        Document document;
         try {
             document = Jsoup.connect(url).get();
         } catch (IOException e) {
