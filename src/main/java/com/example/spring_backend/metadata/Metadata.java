@@ -13,6 +13,7 @@ import lombok.*;
 @Builder
 @Table(name = "metadata")
 public class Metadata extends BaseEntity {
+    private String url;
     private String title;
     private String image;
 }

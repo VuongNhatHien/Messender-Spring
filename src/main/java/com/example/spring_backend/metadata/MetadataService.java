@@ -34,6 +34,6 @@ public class MetadataService extends BaseService<Metadata, Long> {
         }
         String image = document.select("meta[property=og:image]").attr("content");
 
-        return create(new Metadata(title, image));
+        return create(new Metadata(url, title, image));
     }
 }

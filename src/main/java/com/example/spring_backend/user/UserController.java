@@ -2,6 +2,7 @@ package com.example.spring_backend.user;
 
 import com.example.spring_backend.chat.Chat;
 import com.example.spring_backend.services.GetMeService;
+import com.example.spring_backend.shared.ApiResponse;
 import com.example.spring_backend.user.dto.PreviewChatResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.AllArgsConstructor;
@@ -32,8 +33,14 @@ public class UserController {
 
     @Operation(summary = "Get all preview chats")
     @GetMapping("chats")
-    public List<PreviewChatResponse> getPreviews() {
+    public ApiResponse< List<PreviewChatResponse>> getPreviews() {
         Long meId = getMeService.getMeId();
-        return userService.getPreviews(meId);
+        return new ApiResponse<>(userService.getPreviews(meId));
+    }
+
+    @Operation(summary = "Find user by id")
+    @GetMapping("/{id}")
+    public ApiResponse<User> findById(@PathVariable("id") Long id) {
+        return new ApiResponse<>(userService.findUserById(id));
     }
 }

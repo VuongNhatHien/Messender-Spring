@@ -13,6 +13,7 @@ import com.example.spring_backend.metadata.Metadata;
 import com.example.spring_backend.metadata.MetadataService;
 import com.example.spring_backend.shared.BaseService;
 import com.example.spring_backend.shared.ErrorCode;
+import com.example.spring_backend.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -133,5 +134,16 @@ public class ChatService extends BaseService<Chat, Long> {
             throw new BadRequestException(ErrorCode.NOT_IN_CHAT);
         }
         return chatRepository.getAllLinks(chatId);
+    }
+
+    public User findUserInChat(Long chatId, Long meId) {
+        Chat chat = chatRepository.findById(chatId)
+                .orElseThrow(() -> new BadRequestException(ErrorCode.CHAT_NOT_FOUND));
+
+        if (!chat.getUser1Id().equals(meId) && !chat.getUser2Id().equals(meId)) {
+            throw new BadRequestException(ErrorCode.NOT_IN_CHAT);
+        }
+
+        return chatRepository.findUserInChat(chatId, meId);
     }
 }

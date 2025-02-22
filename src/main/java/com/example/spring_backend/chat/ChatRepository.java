@@ -3,6 +3,7 @@ package com.example.spring_backend.chat;
 import com.example.spring_backend.attachment.Attachment;
 import com.example.spring_backend.chat.dto.GetMessageResponse;
 import com.example.spring_backend.metadata.Metadata;
+import com.example.spring_backend.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -52,4 +53,13 @@ public interface ChatRepository extends JpaRepository<Chat, Long> {
                 ORDER BY m.createdAt DESC
             """)
     List<GetMessageResponse> getMessages(@Param("chatId") Long chatId);
+
+    @Query("""
+                SELECT u
+                FROM User u
+                JOIN Chat c ON c.id = :chatId
+                WHERE u.id != :meId
+                  AND (c.user1Id = u.id OR c.user2Id = u.id)
+            """)
+    User findUserInChat(Long chatId, Long meId);
 }

@@ -18,6 +18,10 @@ public class UserService extends BaseService<User, Long> {
     private final UserRepository userRepository;
     private final ChatService chatService;
 
+    public User findUserById(Long id) {
+        return userRepository.findById(id).orElseThrow(() -> new BadRequestException(ErrorCode.USER_NOT_FOUND));
+    }
+
     public User findByUsername(String username) {
         return userRepository.findByUsername(username).orElseThrow(() -> new BadRequestException(ErrorCode.USER_NOT_FOUND));
     }

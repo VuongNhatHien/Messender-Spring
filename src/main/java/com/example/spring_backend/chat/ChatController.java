@@ -7,6 +7,8 @@ import com.example.spring_backend.chat.dto.SendMessageRequest;
 import com.example.spring_backend.message.Message;
 import com.example.spring_backend.metadata.Metadata;
 import com.example.spring_backend.services.GetMeService;
+import com.example.spring_backend.shared.ApiResponse;
+import com.example.spring_backend.user.User;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -30,10 +32,9 @@ public class ChatController {
 
     @Operation(summary = "Get messages")
     @GetMapping("/{chatId}/messages")
-
-    public List<GetMessageResponse> getMessages(@PathVariable("chatId") Long chatId) {
+    public ApiResponse<List<GetMessageResponse>> getMessages(@PathVariable("chatId") Long chatId) {
         Long meId = getMeService.getMeId();
-        return chatService.getMessages(chatId, meId);
+        return new ApiResponse<>(chatService.getMessages(chatId, meId));
     }
 
     @Operation(summary = "Send attachments")
@@ -48,22 +49,29 @@ public class ChatController {
 
     @Operation(summary = "Get all media")
     @GetMapping("/{chatId}/attachments/media")
-    public List<Attachment> getMedia(@PathVariable("chatId") Long chatId) {
+    public ApiResponse<List<Attachment>> getMedia(@PathVariable("chatId") Long chatId) {
         Long meId = getMeService.getMeId();
-        return chatService.getAllMedia(chatId, meId);
+        return new ApiResponse<>(chatService.getAllMedia(chatId, meId));
     }
 
     @Operation(summary = "Get all files")
     @GetMapping("/{chatId}/attachments/files")
-    public List<Attachment> getFiles(@PathVariable("chatId") Long chatId) {
+    public ApiResponse<List<Attachment>> getFiles(@PathVariable("chatId") Long chatId) {
         Long meId = getMeService.getMeId();
-        return chatService.getAllFiles(chatId, meId);
+        return new ApiResponse<>(chatService.getAllFiles(chatId, meId));
     }
 
     @Operation(summary = "Get all links")
     @GetMapping("/{chatId}/links")
-    public List<Metadata> getLinks(@PathVariable("chatId") Long chatId) {
+    public ApiResponse<List<Metadata>> getLinks(@PathVariable("chatId") Long chatId) {
         Long meId = getMeService.getMeId();
-        return chatService.getAllLinks(chatId, meId);
+        return new ApiResponse<>(chatService.getAllLinks(chatId, meId));
+    }
+
+    @Operation(summary = "Get user in chat")
+    @GetMapping("/{chatId}/users")
+    public ApiResponse<User> findUserInChat(@PathVariable("chatId") Long chatId) {
+        Long meId = getMeService.getMeId();
+        return new ApiResponse<>(chatService.findUserInChat(chatId, meId));
     }
 }
