@@ -22,7 +22,7 @@ public class MetadataService extends BaseService<Metadata, Long> {
         System.out.println("Extracting metadata from " + url + "...");
         Document document;
         try {
-            document = Jsoup.connect(url).get();
+            document = Jsoup.connect(url).userAgent("Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:137.0) Gecko/20100101 Firefox/137.0").get();
         } catch (IOException e) {
             System.out.println("Error while extracting metadata" + e);
             return null;

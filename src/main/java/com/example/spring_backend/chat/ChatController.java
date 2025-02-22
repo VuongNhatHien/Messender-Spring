@@ -39,12 +39,12 @@ public class ChatController {
 
     @Operation(summary = "Send attachments")
     @PostMapping("/{chatId}/attachments")
-    public List<Message> sendAttachments(
+    public ApiResponse<List<Message>> sendAttachments(
             @PathVariable("chatId") Long chatId,
             @ModelAttribute @Valid SendAttachmentRequest input
     ) {
         Long meId = getMeService.getMeId();
-        return chatService.sendAttachments(chatId, meId, input);
+        return new ApiResponse<>(chatService.sendAttachments(chatId, meId, input));
     }
 
     @Operation(summary = "Get all media")

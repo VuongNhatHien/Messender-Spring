@@ -19,21 +19,21 @@ public class UserController {
 
     @Operation(summary = "Request a new chat")
     @PostMapping("/{userId}/chat-requests")
-    public Chat requestChat(@PathVariable("userId") Long userId) {
+    public ApiResponse<Chat> requestChat(@PathVariable("userId") Long userId) {
         Long meId = getMeService.getMeId();
-        return userService.addChat(meId, userId);
+        return new ApiResponse<>(userService.addChat(meId, userId));
     }
 
     @Operation(summary = "Get all not-connected users")
     @GetMapping("not-connected")
-    public List<User> getNotConnectedUsers() {
+    public ApiResponse<List<User>> getNotConnectedUsers() {
         Long meId = getMeService.getMeId();
-        return userService.getNotConnectedUsers(meId);
+        return new ApiResponse<>(userService.getNotConnectedUsers(meId));
     }
 
     @Operation(summary = "Get all preview chats")
     @GetMapping("chats")
-    public ApiResponse< List<PreviewChatResponse>> getPreviews() {
+    public ApiResponse<List<PreviewChatResponse>> getPreviews() {
         Long meId = getMeService.getMeId();
         return new ApiResponse<>(userService.getPreviews(meId));
     }
