@@ -25,9 +25,9 @@ public class ChatController {
 
     @Operation(summary = "Send a message")
     @PostMapping("/{chatId}/messages")
-    public Message sendMessage(@PathVariable("chatId") Long chatId, @RequestBody @Valid SendMessageRequest input) {
+    public ApiResponse<Message> sendMessage(@PathVariable("chatId") Long chatId, @RequestBody @Valid SendMessageRequest input) {
         Long meId = getMeService.getMeId();
-        return chatService.sendMessage(chatId, meId, input);
+        return new ApiResponse<>(chatService.sendMessage(chatId, meId, input));
     }
 
     @Operation(summary = "Get messages")
