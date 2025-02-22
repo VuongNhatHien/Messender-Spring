@@ -42,11 +42,6 @@ public class User extends BaseEntity implements UserDetails {
         return password;
     }
 
-    @JsonIgnore
-    public String getUsername() {
-        return username;
-    }
-
     @Override
     @JsonIgnore
     public boolean isAccountNonExpired() {
