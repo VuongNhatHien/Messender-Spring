@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class GetMessageResponse {
+public class MessageResponse {
     @JsonUnwrapped
     private Message message;
     private Attachment attachment;

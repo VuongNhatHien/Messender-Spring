@@ -2,12 +2,13 @@ package com.example.spring_backend.chat;
 
 import com.example.spring_backend.attachment.Attachment;
 import com.example.spring_backend.attachment.AttachmentService;
-import com.example.spring_backend.chat.dto.GetMessageResponse;
+import com.example.spring_backend.chat.dto.MessageResponse;
 import com.example.spring_backend.chat.dto.SendAttachmentRequest;
 import com.example.spring_backend.chat.dto.SendMessageRequest;
 import com.example.spring_backend.exception.BadRequestException;
 import com.example.spring_backend.exception.ConflictException;
 import com.example.spring_backend.message.Message;
+import com.example.spring_backend.message.MessageRepository;
 import com.example.spring_backend.message.MessageService;
 import com.example.spring_backend.metadata.Metadata;
 import com.example.spring_backend.metadata.MetadataService;
@@ -29,13 +30,15 @@ public class ChatService extends BaseService<Chat, Long> {
     private final MessageService messageService;
     private final AttachmentService attachmentService;
     private final MetadataService metadataService;
+    private final MessageRepository messageRepository;
 
-    public ChatService(JpaRepository<Chat, Long> repository, ChatRepository chatRepository, MessageService messageService, AttachmentService attachmentService, MetadataService metadataService) {
+    public ChatService(JpaRepository<Chat, Long> repository, ChatRepository chatRepository, MessageService messageService, AttachmentService attachmentService, MetadataService metadataService, MessageRepository messageRepository) {
         super(repository);
         this.chatRepository = chatRepository;
         this.messageService = messageService;
         this.attachmentService = attachmentService;
         this.metadataService = metadataService;
+        this.messageRepository = messageRepository;
     }
 
     public Chat create(Chat chat) {
@@ -56,7 +59,7 @@ public class ChatService extends BaseService<Chat, Long> {
         return null;
     }
 
-    public Message sendMessage(Long chatId, Long senderId, SendMessageRequest input) {
+    public MessageResponse sendMessage(Long chatId, Long senderId, SendMessageRequest input) {
         Chat chat = chatRepository.findById(chatId).orElseThrow(() -> new BadRequestException(ErrorCode.CHAT_NOT_FOUND));
         if (!chat.getUser1Id().equals(senderId) && !chat.getUser2Id().equals(senderId)) {
             throw new BadRequestException(ErrorCode.NOT_IN_CHAT);
@@ -73,10 +76,12 @@ public class ChatService extends BaseService<Chat, Long> {
         if (metadata != null) {
             metadataId = metadata.getId();
         }
-        return messageService.sendMessage(chatId, senderId, message, metadataId);
+        var res =  messageService.sendMessage(chatId, senderId, message, metadataId);
+
+        return new MessageResponse(res, null, metadata);
     }
 
-    public List<Message> sendAttachments(Long chatId, Long senderId, SendAttachmentRequest input) {
+    public MessageResponse sendAttachments(Long chatId, Long senderId, SendAttachmentRequest input) {
         Chat chat = chatRepository.findById(chatId)
                 .orElseThrow(() -> new BadRequestException(ErrorCode.CHAT_NOT_FOUND));
 
@@ -84,19 +89,15 @@ public class ChatService extends BaseService<Chat, Long> {
             throw new BadRequestException(ErrorCode.NOT_IN_CHAT);
         }
 
-        List<MultipartFile> attachments = input.getAttachments();
+        MultipartFile attachment = input.getAttachment();
 
-        List<Long> attachmentIds = attachments.stream()
-                .map(attachmentService::createAttachment)
-                .map(Attachment::getId)
-                .toList();
+        Attachment attachmentRes = attachmentService.createAttachment(attachment);
+        Message message = messageService.create(new Message(chatId, senderId, null, attachmentRes.getId(), null));
 
-        return attachmentIds.stream()
-                .map(attachmentId -> messageService.sendAttachment(chatId, senderId, attachmentId))
-                .toList();
+        return new MessageResponse(message, attachmentRes, null);
     }
 
-    public List<GetMessageResponse> getMessages(Long chatId, Long meId) {
+    public List<MessageResponse> getMessages(Long chatId, Long meId) {
         Chat chat = chatRepository.findById(chatId)
                 .orElseThrow(() -> new BadRequestException(ErrorCode.CHAT_NOT_FOUND));
 

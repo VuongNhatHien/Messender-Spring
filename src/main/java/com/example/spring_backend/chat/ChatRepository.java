@@ -1,7 +1,7 @@
 package com.example.spring_backend.chat;
 
 import com.example.spring_backend.attachment.Attachment;
-import com.example.spring_backend.chat.dto.GetMessageResponse;
+import com.example.spring_backend.chat.dto.MessageResponse;
 import com.example.spring_backend.metadata.Metadata;
 import com.example.spring_backend.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -43,7 +43,7 @@ public interface ChatRepository extends JpaRepository<Chat, Long> {
     List<Metadata> getAllLinks(@Param("chatId") Long chatId);
 
     @Query("""
-                SELECT new com.example.spring_backend.chat.dto.GetMessageResponse(
+                SELECT new com.example.spring_backend.chat.dto.MessageResponse(
                     m,
                     a,
                     l
@@ -52,7 +52,7 @@ public interface ChatRepository extends JpaRepository<Chat, Long> {
                 WHERE m.chatId = :chatId
                 ORDER BY m.createdAt DESC
             """)
-    List<GetMessageResponse> getMessages(@Param("chatId") Long chatId);
+    List<MessageResponse> getMessages(@Param("chatId") Long chatId);
 
     @Query("""
                 SELECT u

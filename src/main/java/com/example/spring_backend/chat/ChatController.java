@@ -1,10 +1,9 @@
 package com.example.spring_backend.chat;
 
 import com.example.spring_backend.attachment.Attachment;
-import com.example.spring_backend.chat.dto.GetMessageResponse;
+import com.example.spring_backend.chat.dto.MessageResponse;
 import com.example.spring_backend.chat.dto.SendAttachmentRequest;
 import com.example.spring_backend.chat.dto.SendMessageRequest;
-import com.example.spring_backend.message.Message;
 import com.example.spring_backend.metadata.Metadata;
 import com.example.spring_backend.services.GetMeService;
 import com.example.spring_backend.shared.ApiResponse;
@@ -25,21 +24,21 @@ public class ChatController {
 
     @Operation(summary = "Send a message")
     @PostMapping("/{chatId}/messages")
-    public ApiResponse<Message> sendMessage(@PathVariable("chatId") Long chatId, @RequestBody @Valid SendMessageRequest input) {
+    public ApiResponse<MessageResponse> sendMessage(@PathVariable("chatId") Long chatId, @RequestBody @Valid SendMessageRequest input) {
         Long meId = getMeService.getMeId();
         return new ApiResponse<>(chatService.sendMessage(chatId, meId, input));
     }
 
     @Operation(summary = "Get messages")
     @GetMapping("/{chatId}/messages")
-    public ApiResponse<List<GetMessageResponse>> getMessages(@PathVariable("chatId") Long chatId) {
+    public ApiResponse<List<MessageResponse>> getMessages(@PathVariable("chatId") Long chatId) {
         Long meId = getMeService.getMeId();
         return new ApiResponse<>(chatService.getMessages(chatId, meId));
     }
 
     @Operation(summary = "Send attachments")
     @PostMapping("/{chatId}/attachments")
-    public ApiResponse<List<Message>> sendAttachments(
+    public ApiResponse<MessageResponse> sendAttachments(
             @PathVariable("chatId") Long chatId,
             @ModelAttribute @Valid SendAttachmentRequest input
     ) {

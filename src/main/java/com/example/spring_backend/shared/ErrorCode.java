@@ -10,4 +10,6 @@ public class ErrorCode {
     public static final String ADD_SELF_CHAT = "ADD_SELF_CHAT";
     public static final String CHAT_NOT_FOUND = "CHAT_NOT_FOUND";
     public static final String NOT_IN_CHAT = "NOT_IN_CHAT";
+    //Attachment
+    public static final String ATTACHMENT_NOT_FOUND = "ATTACHMENT_NOT_FOUND";
 }
