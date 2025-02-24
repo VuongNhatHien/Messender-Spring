@@ -1,6 +1,6 @@
 package com.example.spring_backend.user;
 
-import com.example.spring_backend.chat.Chat;
+import com.example.spring_backend.chat.dto.AddChatResponse;
 import com.example.spring_backend.services.GetMeService;
 import com.example.spring_backend.shared.ApiResponse;
 import com.example.spring_backend.user.dto.PreviewChatResponse;
@@ -19,7 +19,7 @@ public class UserController {
 
     @Operation(summary = "Request a new chat")
     @PostMapping("/{userId}/chat-requests")
-    public ApiResponse<Chat> requestChat(@PathVariable("userId") Long userId) {
+    public ApiResponse<AddChatResponse> requestChat(@PathVariable("userId") Long userId) {
         Long meId = getMeService.getMeId();
         return new ApiResponse<>(userService.addChat(meId, userId));
     }

@@ -2,6 +2,7 @@ package com.example.spring_backend.user;
 
 import com.example.spring_backend.chat.Chat;
 import com.example.spring_backend.chat.ChatService;
+import com.example.spring_backend.chat.dto.AddChatResponse;
 import com.example.spring_backend.exception.BadRequestException;
 import com.example.spring_backend.exception.ConflictException;
 import com.example.spring_backend.shared.BaseService;
@@ -43,14 +44,14 @@ public class UserService extends BaseService<User, Long> {
         return super.create(user);
     }
 
-    public Chat addChat(Long meId, Long userId) {
-        if (!userRepository.existsById(meId) || !userRepository.existsById(userId)) {
-            throw new BadRequestException(ErrorCode.USER_NOT_FOUND);
-        }
+    public AddChatResponse addChat(Long meId, Long userId) {
+        User me = findUserById(meId);
+        User user = findUserById(userId);
         if (meId.equals(userId)) {
             throw new BadRequestException(ErrorCode.ADD_SELF_CHAT);
         }
-        return chatService.create(new Chat(meId, userId));
+        Chat res =  chatService.create(new Chat(meId, userId));
+        return new AddChatResponse(res, me, user);
     }
 
     public List<User> getNotConnectedUsers(Long meId) {
