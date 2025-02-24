@@ -17,6 +17,13 @@ public class UserController {
     private final UserService userService;
     private final GetMeService getMeService;
 
+    @Operation(summary = "Get user information")
+    @GetMapping("me")
+    public ApiResponse<User> getMe() {
+        Long meId = getMeService.getMeId();
+        return new ApiResponse<>(userService.findUserById(meId));
+    }
+
     @Operation(summary = "Request a new chat")
     @PostMapping("/{userId}/chat-requests")
     public ApiResponse<AddChatResponse> requestChat(@PathVariable("userId") Long userId) {
