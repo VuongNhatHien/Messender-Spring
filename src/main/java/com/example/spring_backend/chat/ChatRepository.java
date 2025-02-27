@@ -20,8 +20,9 @@ public interface ChatRepository extends JpaRepository<Chat, Long> {
                 WHERE m.chatId = :chatId
                   AND (a.type LIKE 'image%' OR a.type LIKE 'video%')
                 ORDER BY a.createdAt DESC
+                LIMIT :limit OFFSET :offset
             """)
-    List<Attachment> getAllMedia(@Param("chatId") Long chatId);
+    List<Attachment> getAllMedia(@Param("chatId") Long chatId, @Param("limit") int limit, @Param("offset") int offset);
 
     @Query("""
                 SELECT a
@@ -30,8 +31,9 @@ public interface ChatRepository extends JpaRepository<Chat, Long> {
                 WHERE m.chatId = :chatId
                   AND (a.type NOT LIKE 'image%' AND a.type NOT LIKE 'video%')
                 ORDER BY a.createdAt DESC
+                LIMIT :limit OFFSET :offset
             """)
-    List<Attachment> getAllFiles(@Param("chatId") Long chatId);
+    List<Attachment> getAllFiles(@Param("chatId") Long chatId, @Param("limit") int limit, @Param("offset") int offset);
 
     @Query("""
                 SELECT l
@@ -39,8 +41,9 @@ public interface ChatRepository extends JpaRepository<Chat, Long> {
                 JOIN Message m ON m.metadataId = l.id
                 WHERE m.chatId = :chatId
                 ORDER BY l.createdAt DESC
+                LIMIT :limit OFFSET :offset
             """)
-    List<Metadata> getAllLinks(@Param("chatId") Long chatId);
+    List<Metadata> getAllLinks(@Param("chatId") Long chatId, @Param("limit") int limit, @Param("offset") int offset);
 
     @Query("""
                 SELECT new com.example.spring_backend.chat.dto.MessageResponse(

@@ -51,23 +51,26 @@ public class ChatController {
 
     @Operation(summary = "Get all media")
     @GetMapping("/{chatId}/attachments/media")
-    public ApiResponse<List<Attachment>> getMedia(@PathVariable("chatId") Long chatId) {
+    public ApiResponse<List<Attachment>> getMedia(@PathVariable("chatId") Long chatId, @RequestParam(defaultValue = "10") int limit,
+                                                  @RequestParam(defaultValue = "1") int page) {
         Long meId = getMeService.getMeId();
-        return new ApiResponse<>(chatService.getAllMedia(chatId, meId));
+        return new ApiResponse<>(chatService.getAllMedia(chatId, meId, limit, page));
     }
 
     @Operation(summary = "Get all files")
     @GetMapping("/{chatId}/attachments/files")
-    public ApiResponse<List<Attachment>> getFiles(@PathVariable("chatId") Long chatId) {
+    public ApiResponse<List<Attachment>> getFiles(@PathVariable("chatId") Long chatId, @RequestParam(defaultValue = "10") int limit,
+                                                  @RequestParam(defaultValue = "1") int page) {
         Long meId = getMeService.getMeId();
-        return new ApiResponse<>(chatService.getAllFiles(chatId, meId));
+        return new ApiResponse<>(chatService.getAllFiles(chatId, meId, limit, page));
     }
 
     @Operation(summary = "Get all links")
     @GetMapping("/{chatId}/links")
-    public ApiResponse<List<Metadata>> getLinks(@PathVariable("chatId") Long chatId) {
+    public ApiResponse<List<Metadata>> getLinks(@PathVariable("chatId") Long chatId, @RequestParam(defaultValue = "10") int limit,
+                                                @RequestParam(defaultValue = "1") int page) {
         Long meId = getMeService.getMeId();
-        return new ApiResponse<>(chatService.getAllLinks(chatId, meId));
+        return new ApiResponse<>(chatService.getAllLinks(chatId, meId, limit, page));
     }
 
     @Operation(summary = "Get user in chat")

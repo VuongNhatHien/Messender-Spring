@@ -108,35 +108,37 @@ public class ChatService extends BaseService<Chat, Long> {
         return chatRepository.getMessages(chatId, limit, offset);
     }
 
-    public List<Attachment> getAllMedia(Long chatId, Long meId) {
+    public List<Attachment> getAllMedia(Long chatId, Long meId, int limit, int page) {
         Chat chat = chatRepository.findById(chatId)
                 .orElseThrow(() -> new BadRequestException(ErrorCode.CHAT_NOT_FOUND));
 
         if (!chat.getUser1Id().equals(meId) && !chat.getUser2Id().equals(meId)) {
             throw new BadRequestException(ErrorCode.NOT_IN_CHAT);
         }
-
-        return chatRepository.getAllMedia(chatId);
+        int offset = (page - 1) * limit;
+        return chatRepository.getAllMedia(chatId, limit, offset);
     }
 
-    public List<Attachment> getAllFiles(Long chatId, Long meId) {
+    public List<Attachment> getAllFiles(Long chatId, Long meId, int limit, int page) {
         Chat chat = chatRepository.findById(chatId)
                 .orElseThrow(() -> new BadRequestException(ErrorCode.CHAT_NOT_FOUND));
 
         if (!chat.getUser1Id().equals(meId) && !chat.getUser2Id().equals(meId)) {
             throw new BadRequestException(ErrorCode.NOT_IN_CHAT);
         }
-        return chatRepository.getAllFiles(chatId);
+        int offset = (page - 1) * limit;
+        return chatRepository.getAllFiles(chatId, limit, offset);
     }
 
-    public List<Metadata> getAllLinks(Long chatId, Long meId) {
+    public List<Metadata> getAllLinks(Long chatId, Long meId, int limit, int page) {
         Chat chat = chatRepository.findById(chatId)
                 .orElseThrow(() -> new BadRequestException(ErrorCode.CHAT_NOT_FOUND));
 
         if (!chat.getUser1Id().equals(meId) && !chat.getUser2Id().equals(meId)) {
             throw new BadRequestException(ErrorCode.NOT_IN_CHAT);
         }
-        return chatRepository.getAllLinks(chatId);
+        int offset = (page - 1) * limit;
+        return chatRepository.getAllLinks(chatId, limit, offset);
     }
 
     public User findUserInChat(Long chatId, Long meId) {
