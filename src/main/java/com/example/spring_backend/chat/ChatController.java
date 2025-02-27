@@ -31,9 +31,12 @@ public class ChatController {
 
     @Operation(summary = "Get messages")
     @GetMapping("/{chatId}/messages")
-    public ApiResponse<List<MessageResponse>> getMessages(@PathVariable("chatId") Long chatId) {
+
+    public ApiResponse<List<MessageResponse>> getMessages(@PathVariable("chatId") Long chatId,
+                                                          @RequestParam(defaultValue = "10") int limit,
+                                                          @RequestParam(defaultValue = "1") int page) {
         Long meId = getMeService.getMeId();
-        return new ApiResponse<>(chatService.getMessages(chatId, meId));
+        return new ApiResponse<>(chatService.getMessages(chatId, meId, limit, page));
     }
 
     @Operation(summary = "Send attachments")

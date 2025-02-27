@@ -51,8 +51,9 @@ public interface ChatRepository extends JpaRepository<Chat, Long> {
                 FROM Message m LEFT JOIN Attachment a ON m.attachmentId = a.id LEFT JOIN Metadata l ON m.metadataId = l.id
                 WHERE m.chatId = :chatId
                 ORDER BY m.createdAt DESC
+                LIMIT :limit OFFSET :offset
             """)
-    List<MessageResponse> getMessages(@Param("chatId") Long chatId);
+    List<MessageResponse> getMessages(@Param("chatId") Long chatId, @Param("limit") int limit, @Param("offset") int offset);
 
     @Query("""
                 SELECT u

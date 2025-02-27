@@ -97,14 +97,15 @@ public class ChatService extends BaseService<Chat, Long> {
         return new MessageResponse(message, attachmentRes, null);
     }
 
-    public List<MessageResponse> getMessages(Long chatId, Long meId) {
+    public List<MessageResponse> getMessages(Long chatId, Long meId, int limit, int page) {
         Chat chat = chatRepository.findById(chatId)
                 .orElseThrow(() -> new BadRequestException(ErrorCode.CHAT_NOT_FOUND));
 
         if (!chat.getUser1Id().equals(meId) && !chat.getUser2Id().equals(meId)) {
             throw new BadRequestException(ErrorCode.NOT_IN_CHAT);
         }
-        return chatRepository.getMessages(chatId);
+        int offset = (page - 1) * limit;
+        return chatRepository.getMessages(chatId, limit, offset);
     }
 
     public List<Attachment> getAllMedia(Long chatId, Long meId) {
