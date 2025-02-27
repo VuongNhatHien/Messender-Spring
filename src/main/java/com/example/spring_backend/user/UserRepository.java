@@ -12,6 +12,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     boolean existsByUsername(String username);
 
     Optional<User> findByUsername(String username);
+
     @Query("""
                 SELECT u
                 FROM User u
@@ -24,8 +25,10 @@ public interface UserRepository extends JpaRepository<User, Long> {
                     FROM Chat c
                     WHERE c.user1Id = :meId OR c.user2Id = :meId
                 )
+                ORDER BY u.id
+                LIMIT :limit OFFSET :offset
             """)
-    List<User> getNotConnectedUsers(@Param("meId") Long meId);
+    List<User> getNotConnectedUsers(@Param("meId") Long meId, @Param("limit") int limit, @Param("offset") int offset);
 
     @Query("""
                 SELECT new com.example.spring_backend.user.dto.PreviewChatResponse(
@@ -47,6 +50,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
                 END
                 WHERE c.user1Id = :meId OR c.user2Id = :meId
                 ORDER BY c.updatedAt DESC
+                LIMIT :limit OFFSET :offset
             """)
-    List<PreviewChatResponse> getPreviews(@Param("meId") Long meId);
+    List<PreviewChatResponse> getPreviews(@Param("meId") Long meId, @Param("limit") int limit, @Param("offset") int offset);
 }

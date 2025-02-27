@@ -54,11 +54,13 @@ public class UserService extends BaseService<User, Long> {
         return new AddChatResponse(res, me, user);
     }
 
-    public List<User> getNotConnectedUsers(Long meId) {
-        return userRepository.getNotConnectedUsers(meId);
+    public List<User> getNotConnectedUsers(Long meId, int limit, int page) {
+        int offset = (page - 1) * limit;
+        return userRepository.getNotConnectedUsers(meId, limit, offset);
     }
 
-    public List<PreviewChatResponse> getPreviews(Long meId) {
-        return userRepository.getPreviews(meId);
+    public List<PreviewChatResponse> getPreviews(Long meId, int limit, int page) {
+        int offset = (page - 1) * limit;
+        return userRepository.getPreviews(meId, limit, offset);
     }
 }
