@@ -3,8 +3,8 @@ package com.example.spring_backend.chat;
 import com.example.spring_backend.attachment.Attachment;
 import com.example.spring_backend.attachment.AttachmentService;
 import com.example.spring_backend.chat.dto.MessageResponse;
-import com.example.spring_backend.chat.dto.SendAttachmentRequest;
 import com.example.spring_backend.chat.dto.SendMessageRequest;
+import com.example.spring_backend.chat.type.SendAttachmentType;
 import com.example.spring_backend.exception.BadRequestException;
 import com.example.spring_backend.exception.ConflictException;
 import com.example.spring_backend.message.Message;
@@ -17,8 +17,8 @@ import com.example.spring_backend.shared.ErrorCode;
 import com.example.spring_backend.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -81,7 +81,12 @@ public class ChatService extends BaseService<Chat, Long> {
         return new MessageResponse(res, null, metadata);
     }
 
-    public MessageResponse sendAttachment(Long chatId, Long senderId, SendAttachmentRequest input) {
+    public MessageResponse sendAttachment(SendAttachmentType input) {
+        Long chatId = input.getChatId();
+        Long senderId = input.getMeId();
+        String filePath = input.getFilePath();
+        File file = new File(filePath);
+
         Chat chat = chatRepository.findById(chatId)
                 .orElseThrow(() -> new BadRequestException(ErrorCode.CHAT_NOT_FOUND));
 
@@ -89,10 +94,12 @@ public class ChatService extends BaseService<Chat, Long> {
             throw new BadRequestException(ErrorCode.NOT_IN_CHAT);
         }
 
-        MultipartFile attachment = input.getAttachment();
-
-        Attachment attachmentRes = attachmentService.createAttachment(attachment);
+        Attachment attachmentRes = attachmentService.createAttachment(file);
         Message message = messageService.create(new Message(chatId, senderId, null, attachmentRes.getId(), null));
+        if (!file.delete()) {
+            System.err.println("Failed to delete file: " + filePath);
+        }
+        System.out.println(" [x] File deleted " + filePath);
 
         return new MessageResponse(message, attachmentRes, null);
     }

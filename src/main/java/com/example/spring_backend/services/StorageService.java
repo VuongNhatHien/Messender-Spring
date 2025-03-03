@@ -7,8 +7,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.util.UUID;
 
 @Service
@@ -19,14 +20,16 @@ public class StorageService {
     private final AwsS3BucketProperties awsS3BucketProperties;
 
     @SneakyThrows
-    public String save(@NonNull final MultipartFile file) {
-        String originalFilename = file.getOriginalFilename();
-        String filenameWithoutExt = originalFilename != null ? originalFilename.substring(0, originalFilename.lastIndexOf('.')) : "";
-        String fileExtension = originalFilename != null && originalFilename.contains(".") ? originalFilename.substring(originalFilename.lastIndexOf('.')) : "";
+    public String save(@NonNull final File file) {
+        String originalFilename = file.getName();
+        String filenameWithoutExt = originalFilename.substring(0, originalFilename.lastIndexOf('.'));
+        String fileExtension = originalFilename.contains(".") ? originalFilename.substring(originalFilename.lastIndexOf('.')) : "";
 
         filenameWithoutExt = filenameWithoutExt.replace(" ", "_");
         String uniqueKey = filenameWithoutExt + "_" + UUID.randomUUID() + "_" + System.currentTimeMillis() + fileExtension;
 
-        return s3Template.upload(awsS3BucketProperties.getBucketName(), uniqueKey, file.getInputStream()).getURL().toString();
+        FileInputStream inputStream = new FileInputStream(file);
+        return s3Template.upload(awsS3BucketProperties.getBucketName(), uniqueKey, inputStream).getURL().toString();
+
     }
 }

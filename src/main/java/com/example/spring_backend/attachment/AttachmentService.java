@@ -1,10 +1,13 @@
 package com.example.spring_backend.attachment;
 
-import com.example.spring_backend.shared.BaseService;
 import com.example.spring_backend.services.StorageService;
+import com.example.spring_backend.shared.BaseService;
+import lombok.SneakyThrows;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
+
+import java.io.File;
+import java.nio.file.Files;
 
 @Service
 public class AttachmentService extends BaseService<Attachment, Long> {
@@ -18,8 +21,19 @@ public class AttachmentService extends BaseService<Attachment, Long> {
         this.storageService = storageService;
     }
 
-    public Attachment createAttachment(MultipartFile attachment) {
-        String url = storageService.save(attachment);
-        return create(new Attachment(url, attachment.getOriginalFilename(), attachment.getContentType(), attachment.getSize()));
+    public Attachment createAttachment(File file) {
+        String originalFilename = file.getName();
+        long fileSize = file.length();
+        String contentType = getContentType(file);
+
+        String url = storageService.save(file);
+
+        return create(new Attachment(url, originalFilename, contentType, fileSize));
+    }
+
+    @SneakyThrows
+    private String getContentType(File file) {
+            return Files.probeContentType(file.toPath());
+
     }
 }

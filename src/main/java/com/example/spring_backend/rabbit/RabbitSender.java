@@ -1,5 +1,6 @@
 package com.example.spring_backend.rabbit;
 
+import com.example.spring_backend.chat.type.SendAttachmentType;
 import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,8 +16,8 @@ public class RabbitSender {
     private Queue queue;
 
     @Scheduled(fixedDelay = 1000, initialDelay = 500)
-    public void send(String message) {
-        this.template.convertAndSend(queue.getName(), message);
-        System.out.println(" [x] Sent '" + message + "'");
+    public void send(SendAttachmentType input) {
+        this.template.convertAndSend(queue.getName(), input);
+        System.out.println(" [x] Sent " + input.getFilePath());
     }
 }

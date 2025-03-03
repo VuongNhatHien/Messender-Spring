@@ -1,15 +1,14 @@
 package com.example.spring_backend.chat.type;
 
-import com.example.spring_backend.chat.dto.SendAttachmentRequest;
 import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
-@NoArgsConstructor
 public class SendAttachmentType {
     Long chatId;
     Long meId;
-    SendAttachmentRequest input;
+    String filePath;
 }
