@@ -81,7 +81,7 @@ public class ChatService extends BaseService<Chat, Long> {
         return new MessageResponse(res, null, metadata);
     }
 
-    public MessageResponse sendAttachments(Long chatId, Long senderId, SendAttachmentRequest input) {
+    public MessageResponse sendAttachment(Long chatId, Long senderId, SendAttachmentRequest input) {
         Chat chat = chatRepository.findById(chatId)
                 .orElseThrow(() -> new BadRequestException(ErrorCode.CHAT_NOT_FOUND));
 

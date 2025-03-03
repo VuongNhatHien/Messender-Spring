@@ -5,6 +5,7 @@ import com.example.spring_backend.chat.dto.MessageResponse;
 import com.example.spring_backend.chat.dto.SendAttachmentRequest;
 import com.example.spring_backend.chat.dto.SendMessageRequest;
 import com.example.spring_backend.metadata.Metadata;
+import com.example.spring_backend.rabbit.RabbitSender;
 import com.example.spring_backend.services.GetMeService;
 import com.example.spring_backend.shared.ApiResponse;
 import com.example.spring_backend.user.User;
@@ -21,6 +22,7 @@ import java.util.List;
 public class ChatController {
     private final ChatService chatService;
     private final GetMeService getMeService;
+    private final RabbitSender rabbitSender;
 
     @Operation(summary = "Send a message")
     @PostMapping("/{chatId}/messages")
@@ -46,7 +48,7 @@ public class ChatController {
             @ModelAttribute @Valid SendAttachmentRequest input
     ) {
         Long meId = getMeService.getMeId();
-        return new ApiResponse<>(chatService.sendAttachments(chatId, meId, input));
+        return new ApiResponse<>(chatService.sendAttachment(chatId, meId, input));
     }
 
     @Operation(summary = "Get all media")

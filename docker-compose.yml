@@ -8,12 +8,23 @@ services:
       POSTGRES_DB: ${DB_NAME}
       PGDATA: /data/postgres
     volumes:
-      - pgdata:/data/postgres
+      - pg_data:/data/postgres
     ports:
       - ${DB_PORT}:${DB_PORT}
     restart: always
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    ports:
+      - 5672:5672
+      - 15672:15672
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+
 volumes:
-  pgdata:
+  pg_data:
+  rabbitmq_data:
 
 networks:
   default:
