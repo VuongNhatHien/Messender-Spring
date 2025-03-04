@@ -15,13 +15,12 @@ import com.example.spring_backend.metadata.MetadataService;
 import com.example.spring_backend.shared.BaseService;
 import com.example.spring_backend.shared.ErrorCode;
 import com.example.spring_backend.user.User;
+import com.example.spring_backend.utils.Utils;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 @Service
 public class ChatService extends BaseService<Chat, Long> {
@@ -48,24 +47,13 @@ public class ChatService extends BaseService<Chat, Long> {
         return super.create(chat);
     }
 
-    private String extractFirstUrl(String text) {
-        String urlRegex = "(https:\\/\\/www\\.|http:\\/\\/www\\.|https:\\/\\/|http:\\/\\/)[a-zA-Z]{2,}(\\.[a-zA-Z]{2,})(\\.[a-zA-Z]{2,})?\\/[a-zA-Z0-9]{2,}|((https:\\/\\/www\\.|http:\\/\\/www\\.|https:\\/\\/|http:\\/\\/)[a-zA-Z]{2,}(\\.[a-zA-Z]{2,})(\\.[a-zA-Z]{2,})?)|(https:\\/\\/www\\.|http:\\/\\/www\\.|https:\\/\\/|http:\\/\\/)[a-zA-Z0-9]{2,}\\.[a-zA-Z0-9]{2,}\\.[a-zA-Z0-9]{2,}(\\.[a-zA-Z0-9]{2,})?";
-        Pattern pattern = Pattern.compile(urlRegex);
-        Matcher matcher = pattern.matcher(text);
-
-        if (matcher.find()) {
-            return matcher.group();
-        }
-        return null;
-    }
-
     public MessageResponse sendMessage(Long chatId, Long senderId, SendMessageRequest input) {
         Chat chat = chatRepository.findById(chatId).orElseThrow(() -> new BadRequestException(ErrorCode.CHAT_NOT_FOUND));
         if (!chat.getUser1Id().equals(senderId) && !chat.getUser2Id().equals(senderId)) {
             throw new BadRequestException(ErrorCode.NOT_IN_CHAT);
         }
         String message = input.getMessage();
-        String url = extractFirstUrl(message);
+        String url = Utils.extractFirstUrl(message);
 
         Metadata metadata = null;
         if (url != null) {
@@ -76,7 +64,7 @@ public class ChatService extends BaseService<Chat, Long> {
         if (metadata != null) {
             metadataId = metadata.getId();
         }
-        var res =  messageService.sendMessage(chatId, senderId, message, metadataId);
+        var res = messageService.sendMessage(chatId, senderId, message, metadataId);
 
         return new MessageResponse(res, null, metadata);
     }
@@ -84,8 +72,7 @@ public class ChatService extends BaseService<Chat, Long> {
     public MessageResponse sendAttachment(SendAttachmentType input) {
         Long chatId = input.getChatId();
         Long senderId = input.getMeId();
-        String filePath = input.getFilePath();
-        File file = new File(filePath);
+        MultipartFile attachment = input.getAttachment();
 
         Chat chat = chatRepository.findById(chatId)
                 .orElseThrow(() -> new BadRequestException(ErrorCode.CHAT_NOT_FOUND));
@@ -94,12 +81,8 @@ public class ChatService extends BaseService<Chat, Long> {
             throw new BadRequestException(ErrorCode.NOT_IN_CHAT);
         }
 
-        Attachment attachmentRes = attachmentService.createAttachment(file);
+        Attachment attachmentRes = attachmentService.createAttachment(attachment);
         Message message = messageService.create(new Message(chatId, senderId, null, attachmentRes.getId(), null));
-        if (!file.delete()) {
-            System.err.println("Failed to delete file: " + filePath);
-        }
-        System.out.println(" [x] File deleted " + filePath);
 
         return new MessageResponse(message, attachmentRes, null);
     }

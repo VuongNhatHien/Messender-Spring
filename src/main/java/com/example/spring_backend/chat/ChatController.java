@@ -7,21 +7,16 @@ import com.example.spring_backend.chat.dto.SendMessageRequest;
 import com.example.spring_backend.chat.type.SendAttachmentType;
 import com.example.spring_backend.metadata.Metadata;
 import com.example.spring_backend.rabbit.RabbitSender;
+import com.example.spring_backend.rabbit.type.RabbitAttachmentType;
 import com.example.spring_backend.services.GetMeService;
 import com.example.spring_backend.shared.ApiResponse;
 import com.example.spring_backend.user.User;
+import com.example.spring_backend.utils.Utils;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
-import lombok.SneakyThrows;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 
 @RequestMapping("chats")
@@ -49,24 +44,13 @@ public class ChatController {
 
     @Operation(summary = "Send attachments")
     @PostMapping("/{chatId}/attachments")
-    public ApiResponse<?> sendAttachments(@PathVariable("chatId") Long chatId, @ModelAttribute @Valid SendAttachmentRequest input) throws IOException {
-        String filePath = saveToTempStorage(input.getAttachment());
+    public ApiResponse<MessageResponse> sendAttachments(@PathVariable("chatId") Long chatId, @ModelAttribute @Valid SendAttachmentRequest input) {
         Long meId = getMeService.getMeId();
-        rabbitSender.send(new SendAttachmentType(chatId, meId, filePath));
+        MessageResponse res = chatService.sendAttachment(new SendAttachmentType(chatId, meId, input.getAttachment()));
+        String filePath = Utils.saveToTempStorage(input.getAttachment());
+        rabbitSender.send(new RabbitAttachmentType(res.getAttachment().getId(), filePath));
 
-        return new ApiResponse<>(null);
-    }
-
-    @SneakyThrows
-    private String saveToTempStorage(MultipartFile file) {
-        String projectDir = System.getProperty("user.dir") + "/temp_file/";  // Project root + files folder
-        new File(projectDir).mkdirs();  // Creates the directory if it doesn't exist
-//        String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
-        String fileName = file.getOriginalFilename();
-
-        Path path = Paths.get(projectDir, fileName);
-        Files.write(path, file.getBytes());
-        return path.toString();
+        return new ApiResponse<>(res);
     }
 
     @Operation(summary = "Get all media")

@@ -1,20 +1,28 @@
 package com.example.spring_backend.rabbit;
 
-import com.example.spring_backend.chat.ChatService;
-import com.example.spring_backend.chat.type.SendAttachmentType;
+import com.example.spring_backend.attachment.AttachmentService;
+import com.example.spring_backend.rabbit.type.RabbitAttachmentType;
+import com.example.spring_backend.services.StorageService;
 import org.springframework.amqp.rabbit.annotation.RabbitHandler;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.io.File;
+
 @RabbitListener(queues = "hello")
 public class RabbitReceiver {
     @Autowired
-    private ChatService chatService;
+    private StorageService storageService;
+    @Autowired
+    private AttachmentService attachmentService;
 
     @RabbitHandler
-    public void receive(SendAttachmentType input) {
+    public void receive(RabbitAttachmentType input) {
         System.out.println(" [x] Received " + input.getFilePath());
-        var res = chatService.sendAttachment(input);
-        System.out.println(" [x] Done" + input.getFilePath());
+        File file = new File(input.getFilePath());
+        Long attachmentId = input.getAttachmentId();
+        String url = storageService.save(file);
+        attachmentService.updateAttachmentUrl(attachmentId, url);
+        System.out.println(" [x] Done " + input.getFilePath());
     }
 }

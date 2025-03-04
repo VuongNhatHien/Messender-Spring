@@ -5,6 +5,8 @@ public class ErrorCode {
     public static final String USER_EXISTED = "USER_EXISTED";
     public static final String USER_NOT_FOUND = "USER_NOT_FOUND";
     public static final String WRONG_PASSWORD = "WRONG_PASSWORD";
+
+    public static final String ATTACHMENT_NOT_FOUND = "ATTACHMENT_NOT_FOUND";
     //Chat
     public static final String CHAT_EXISTED = "CHAT_EXISTED";
     public static final String ADD_SELF_CHAT = "ADD_SELF_CHAT";
