@@ -17,7 +17,7 @@ public class RabbitSender {
 
     @Scheduled(fixedDelay = 1000, initialDelay = 500)
     public void send(RabbitAttachmentType input) {
-        this.template.convertAndSend(queue.getName(), input);
+        template.convertAndSend(queue.getName(), input);
         System.out.println(" [x] Sent " + input.getFilePath());
     }
 }

@@ -9,5 +9,6 @@ import lombok.Setter;
 @AllArgsConstructor
 public class RabbitAttachmentType {
     Long attachmentId;
+    Long chatId;
     String filePath;
 }

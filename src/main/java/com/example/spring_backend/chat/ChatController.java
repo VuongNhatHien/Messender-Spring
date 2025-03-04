@@ -48,7 +48,7 @@ public class ChatController {
         Long meId = getMeService.getMeId();
         MessageResponse res = chatService.sendAttachment(new SendAttachmentType(chatId, meId, input.getAttachment()));
         String filePath = Utils.saveToTempStorage(input.getAttachment());
-        rabbitSender.send(new RabbitAttachmentType(res.getAttachment().getId(), filePath));
+        rabbitSender.send(new RabbitAttachmentType(res.getAttachment().getId(), chatId, filePath));
 
         return new ApiResponse<>(res);
     }

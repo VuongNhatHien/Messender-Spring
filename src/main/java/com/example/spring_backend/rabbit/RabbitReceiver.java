@@ -6,6 +6,7 @@ import com.example.spring_backend.services.StorageService;
 import org.springframework.amqp.rabbit.annotation.RabbitHandler;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 
 import java.io.File;
 
@@ -15,6 +16,8 @@ public class RabbitReceiver {
     private StorageService storageService;
     @Autowired
     private AttachmentService attachmentService;
+    @Autowired
+    private SimpMessagingTemplate messagingTemplate;
 
     @RabbitHandler
     public void receive(RabbitAttachmentType input) {
@@ -24,5 +27,9 @@ public class RabbitReceiver {
         String url = storageService.save(file);
         attachmentService.updateAttachmentUrl(attachmentId, url);
         System.out.println(" [x] Done " + input.getFilePath());
+        String destination = "/chat/" + input.getChatId().toString();
+        System.out.println(" [x] Destination " + destination);
+        messagingTemplate.convertAndSend(destination, "done");
+
     }
 }
