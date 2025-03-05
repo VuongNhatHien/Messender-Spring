@@ -18,8 +18,8 @@ public class RabbitMqConfig {
     }
 
     @Bean
-    public Queue hello() {
-        return new Queue("hello");
+    public Queue fileQueue() {
+        return new Queue("file");
     }
 
     @Bean

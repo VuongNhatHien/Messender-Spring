@@ -10,7 +10,7 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 
 import java.io.File;
 
-@RabbitListener(queues = "hello")
+@RabbitListener(queues = "file")
 public class RabbitReceiver {
     @Autowired
     private StorageService storageService;
