@@ -7,6 +7,7 @@ import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -15,7 +16,7 @@ public class Utils {
     public static String saveToTempStorage(MultipartFile file) {
         String projectDir = System.getProperty("user.dir") + "/temp_file/";
         new File(projectDir).mkdirs();
-        String fileName = file.getOriginalFilename();
+        String fileName = UUID.randomUUID() + file.getOriginalFilename();
 
         Path path = Paths.get(projectDir, fileName);
         Files.write(path, file.getBytes());
