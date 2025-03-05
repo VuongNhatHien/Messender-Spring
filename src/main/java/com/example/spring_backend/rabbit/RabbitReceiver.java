@@ -21,15 +21,13 @@ public class RabbitReceiver {
 
     @RabbitHandler
     public void receive(RabbitAttachmentType input) {
-        System.out.println(" [x] Received " + input.getFilePath());
         File file = new File(input.getFilePath());
         Long attachmentId = input.getAttachmentId();
         String url = storageService.save(file);
         attachmentService.updateAttachmentUrl(attachmentId, url);
         System.out.println(" [x] Done " + input.getFilePath());
         String destination = "/chat/" + input.getChatId().toString();
-        System.out.println(" [x] Destination " + destination);
+        file.delete();
         messagingTemplate.convertAndSend(destination, "done");
-
     }
 }

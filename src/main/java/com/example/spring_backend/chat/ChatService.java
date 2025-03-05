@@ -29,7 +29,6 @@ public class ChatService extends BaseService<Chat, Long> {
     private final MessageService messageService;
     private final AttachmentService attachmentService;
     private final MetadataService metadataService;
-    private final MessageRepository messageRepository;
 
     public ChatService(JpaRepository<Chat, Long> repository, ChatRepository chatRepository, MessageService messageService, AttachmentService attachmentService, MetadataService metadataService, MessageRepository messageRepository) {
         super(repository);
@@ -37,7 +36,6 @@ public class ChatService extends BaseService<Chat, Long> {
         this.messageService = messageService;
         this.attachmentService = attachmentService;
         this.metadataService = metadataService;
-        this.messageRepository = messageRepository;
     }
 
     public Chat create(Chat chat) {
