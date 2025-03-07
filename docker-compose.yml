@@ -1,6 +1,6 @@
 services:
   postgres:
-    container_name: postgres
+    container_name: postgres_dev
     image: postgres:17
     environment:
       POSTGRES_USER: ${DB_USER}
@@ -14,8 +14,8 @@ services:
     restart: always
 
   rabbitmq:
+    container_name: rabbitmq_dev
     image: rabbitmq:3-management
-    container_name: rabbitmq
     ports:
       - 5672:5672
       - 15672:15672
