@@ -24,7 +24,7 @@ CREATE TABLE chats
 CREATE TABLE attachments
 (
     id         SERIAL PRIMARY KEY,
-    url        VARCHAR(255),
+    url        VARCHAR(512),
     name       VARCHAR(255),
     type       VARCHAR(255),
     size       INT,
