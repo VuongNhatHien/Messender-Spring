@@ -25,10 +25,18 @@ public interface UserRepository extends JpaRepository<User, Long> {
                     FROM Chat c
                     WHERE c.user1Id = :meId OR c.user2Id = :meId
                 )
+                AND (:searchName = "" OR
+                 LOWER(u.username) LIKE LOWER(CONCAT('%', :searchName, '%')) OR
+                 LOWER(u.displayName) LIKE LOWER(CONCAT('%', :searchName, '%')))
                 ORDER BY u.id
                 LIMIT :limit OFFSET :offset
             """)
-    List<User> getNotConnectedUsers(@Param("meId") Long meId, @Param("limit") int limit, @Param("offset") int offset);
+    List<User> getNotConnectedUsers(
+            @Param("meId") Long meId,
+            @Param("searchName") String searchName,
+            @Param("limit") int limit,
+            @Param("offset") int offset
+    );
 
     @Query("""
                 SELECT new com.example.spring_backend.user.dto.PreviewChatResponse(
@@ -48,9 +56,17 @@ public interface UserRepository extends JpaRepository<User, Long> {
                     WHEN c.user1Id = :meId THEN c.user2Id
                     ELSE c.user1Id
                 END
-                WHERE c.user1Id = :meId OR c.user2Id = :meId
+                WHERE (c.user1Id = :meId OR c.user2Id = :meId)
+                AND (:searchName = "" OR
+                     LOWER(u.username) LIKE LOWER(CONCAT('%', :searchName, '%')) OR
+                     LOWER(u.displayName) LIKE LOWER(CONCAT('%', :searchName, '%')))
                 ORDER BY c.updatedAt DESC
                 LIMIT :limit OFFSET :offset
             """)
-    List<PreviewChatResponse> getPreviews(@Param("meId") Long meId, @Param("limit") int limit, @Param("offset") int offset);
+    List<PreviewChatResponse> getPreviews(
+            @Param("meId") Long meId,
+            @Param("searchName") String searchName,
+            @Param("limit") int limit,
+            @Param("offset") int offset
+    );
 }

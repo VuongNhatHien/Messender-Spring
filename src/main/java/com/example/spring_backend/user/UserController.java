@@ -33,18 +33,22 @@ public class UserController {
 
     @Operation(summary = "Get all not-connected users")
     @GetMapping("not-connected")
-    public ApiResponse<List<User>> getNotConnectedUsers(@RequestParam(defaultValue = "10") int limit,
-                                                        @RequestParam(defaultValue = "1") int page) {
+    public ApiResponse<List<User>> getNotConnectedUsers(
+            @RequestParam(defaultValue = "") String search,
+            @RequestParam(defaultValue = "10") int limit,
+            @RequestParam(defaultValue = "1") int page) {
         Long meId = getMeService.getMeId();
-        return new ApiResponse<>(userService.getNotConnectedUsers(meId, limit, page));
+        return new ApiResponse<>(userService.getNotConnectedUsers(meId, search, limit, page));
     }
 
     @Operation(summary = "Get all preview chats")
     @GetMapping("chats")
-    public ApiResponse<List<PreviewChatResponse>> getPreviews(@RequestParam(defaultValue = "10") int limit,
-                                                              @RequestParam(defaultValue = "1") int page) {
+    public ApiResponse<List<PreviewChatResponse>> getPreviews(
+            @RequestParam(defaultValue = "") String search,
+            @RequestParam(defaultValue = "10") int limit,
+            @RequestParam(defaultValue = "1") int page) {
         Long meId = getMeService.getMeId();
-        return new ApiResponse<>(userService.getPreviews(meId, limit, page));
+        return new ApiResponse<>(userService.getPreviews(meId, search, limit, page));
     }
 
     @Operation(summary = "Find user by id")

@@ -50,17 +50,17 @@ public class UserService extends BaseService<User, Long> {
         if (meId.equals(userId)) {
             throw new BadRequestException(ErrorCode.ADD_SELF_CHAT);
         }
-        Chat res =  chatService.create(new Chat(meId, userId));
+        Chat res = chatService.create(new Chat(meId, userId));
         return new AddChatResponse(res, me, user);
     }
 
-    public List<User> getNotConnectedUsers(Long meId, int limit, int page) {
+    public List<User> getNotConnectedUsers(Long meId, String search, int limit, int page) {
         int offset = (page - 1) * limit;
-        return userRepository.getNotConnectedUsers(meId, limit, offset);
+        return userRepository.getNotConnectedUsers(meId, search, limit, offset);
     }
 
-    public List<PreviewChatResponse> getPreviews(Long meId, int limit, int page) {
+    public List<PreviewChatResponse> getPreviews(Long meId, String search, int limit, int page) {
         int offset = (page - 1) * limit;
-        return userRepository.getPreviews(meId, limit, offset);
+        return userRepository.getPreviews(meId, search, limit, offset);
     }
 }
